@@ -51,10 +51,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Outstanding Questions:
-    - Jonah Ventures: questions/jonah-ventures.md
-    - All Outstanding: questions/all-outstanding.md
-  - Status: status.md
+  - Outstanding Questions: questions/all-outstanding.md
   - Schema:
     - Overview: schema/overview.md
     - Entity Model: schema/entity-model.md
