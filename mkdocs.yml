@@ -2,9 +2,9 @@ site_name: MENA eDNA Data Model
 site_description: >-
   LinkML data model and project documentation for the African Parks
   Molecular Ecological Network Analysis (MENA) eDNA project.
-site_url: https://sformel.github.io/ap-mena/
-repo_url: https://github.com/sformel/ap-mena
-repo_name: sformel/ap-mena
+site_url: https://the-data-patch.github.io/ap-mena/
+repo_url: https://github.com/the-data-patch/ap-mena
+repo_name: the-data-patch/ap-mena
 
 theme:
   name: material
