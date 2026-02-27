@@ -1,0 +1,1269 @@
+id: https://w3id.org/africanparks/mena-edna
+name: mena-edna
+title: MENA eDNA Metabarcoding Schema
+description: >-
+  LinkML schema for the Molecular Ecological Network Analysis (MENA) project.
+  Models environmental DNA (eDNA) metabarcoding data from soil, water, and
+  faecal samples across five African protected areas. Designed to support
+  NCBI BioProject/BioSample/SRA submission and Darwin Core / GBIF publication.
+
+license: https://creativecommons.org/licenses/by/4.0/
+version: 0.1.0
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  mena: https://w3id.org/africanparks/mena-edna/
+  schema: http://schema.org/
+  dwc: http://rs.tdwg.org/dwc/terms/
+  mixs: https://w3id.org/mixs/
+  ENVO: http://purl.obolibrary.org/obo/ENVO_
+  NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+  OBI: http://purl.obolibrary.org/obo/OBI_
+  GEONAMES: http://www.geonames.org/ontology#
+
+default_prefix: mena
+default_range: string
+
+imports:
+  - linkml:types
+
+
+# =============================================================================
+# ENUMS — Controlled vocabularies
+# =============================================================================
+
+enums:
+
+  # ---------------------------------------------------------------------------
+  # Core project enums
+  # ---------------------------------------------------------------------------
+
+  SampleTypeEnum:
+    description: >-
+      Physical sample material type.
+      NCBI_REQUIRED: Maps to env_medium (ENVO term) in BioSample.
+      DWC: Maps to dwc:sampleSizeUnit context.
+    permissible_values:
+      soil:
+        description: Environmental soil sample
+        # ENVO:00001998 (soil)
+      water:
+        description: Filtered environmental water sample (eDNA)
+        # ENVO:00002006 (water)
+      faecal:
+        description: Faecal/dung sample from wildlife or domestic animal
+        # ENVO:00002003 (feces) or UBERON:0001988
+
+  LocationTypeEnum:
+    description: >-
+      Whether the sampling site is inside the managed protected area or in an
+      unmanaged comparison area outside park boundaries.
+    permissible_values:
+      park:
+        description: Inside the managed protected area
+      control:
+        description: Outside park boundaries; unmanaged comparison site
+
+  CountryEnum:
+    description: >-
+      Countries where MENA study sites are located.
+      NCBI_REQUIRED: geo_loc_name must use INSDC country vocabulary.
+      Values here are the standardized forms. Verbatim source values are
+      preserved in country_verbatim.
+    permissible_values:
+      Rwanda:
+        description: "ISO 3166-1 alpha-2: RW"
+      Chad:
+        description: "ISO 3166-1 alpha-2: TD"
+      Angola:
+        description: "ISO 3166-1 alpha-2: AO"
+      Republic of the Congo:
+        description: "ISO 3166-1 alpha-2: CG"
+      Zambia:
+        description: "ISO 3166-1 alpha-2: ZM"
+
+  CountryCodeEnum:
+    description: ISO 3166-1 alpha-2 country codes for MENA study countries.
+    permissible_values:
+      RW:
+        description: Rwanda
+      TD:
+        description: Chad
+      AO:
+        description: Angola
+      CG:
+        description: Republic of the Congo
+      ZM:
+        description: Zambia
+
+  ParkNameEnum:
+    description: >-
+      Canonical names for the five national parks in the MENA project.
+      Verbatim source values are preserved in park_name_verbatim.
+    permissible_values:
+      Akagera:
+        description: Akagera National Park, Rwanda
+      Zakouma:
+        description: Zakouma National Park, Chad
+      Odzala-Kokoua:
+        description: Odzala-Kokoua National Park, Republic of the Congo
+      Iona:
+        description: Iona National Park, Angola
+      Kafue:
+        description: Kafue National Park, Zambia
+
+  HabitatEnum:
+    description: >-
+      Standardized habitat types across MENA study sites.
+      RECOMMENDATION: Each value should be mapped to an ENVO term for
+      NCBI env_broad_scale / env_local_scale and dwc:habitat.
+      Verbatim source values are preserved in habitat_verbatim.
+    permissible_values:
+      bai:
+        description: >-
+          Forest clearing, typically in tropical forest (Odzala-Kokoua).
+          ENVO mapping TBD.
+      flood_plain:
+        description: Seasonally flooded plain. ENVO:01000954
+      forest:
+        description: Tropical forest. ENVO:01000174
+      grassland:
+        description: Grassland. ENVO:00000106
+      savanna_woodland:
+        description: Savanna woodland. ENVO:00000178
+      woodland:
+        description: Woodland. ENVO:00000109
+      shrubland:
+        description: Shrubland. ENVO:00000300
+      wetlands:
+        description: Wetland. ENVO:00000043
+      riverine:
+        description: Riverine habitat. ENVO:00000022
+      mountain:
+        description: Montane habitat. ENVO:00000191
+      desert_dune:
+        description: Desert dune habitat. ENVO:00000170
+      desert_gravelplain:
+        description: Desert gravel plain.
+      desert_grassplain:
+        description: Desert grass plain.
+      riverbed:
+        description: Dry or seasonal riverbed.
+      agriculture:
+        description: Agricultural land (typically in control sites).
+      human_area:
+        description: Human-modified area (settlements, infrastructure).
+      boma:
+        description: Livestock enclosure / kraal.
+      savanna:
+        description: Open savanna.
+      river:
+        description: Active river channel.
+      unknown:
+        description: Habitat not recorded or not determinable.
+
+  # ---------------------------------------------------------------------------
+  # Sequencing and assay enums
+  # ---------------------------------------------------------------------------
+
+  MarkerEnum:
+    description: >-
+      Genetic markers used in metabarcoding assays.
+      NCBI: Maps to target_gene / target_subfragment in SRA.
+      DWC: Maps to DNA Derived Data extension pcr_primer_name_forward, etc.
+    permissible_values:
+      12S_vertebrate:
+        description: >-
+          12S rRNA mitochondrial marker targeting vertebrates.
+          Used for diet analysis (prey identification) from faecal samples.
+          Primer pair TBD (awaiting Jonah Ventures response).
+      trnL:
+        description: >-
+          trnL chloroplast intron marker targeting plants.
+          Used for plant diet analysis from faecal samples.
+          Primer pair TBD.
+      16S:
+        description: >-
+          16S rRNA marker targeting bacteria/archaea.
+          Anticipated for soil and water samples. Not yet in use.
+      18S:
+        description: >-
+          18S rRNA marker targeting eukaryotes.
+          Anticipated for soil and water samples. Not yet in use.
+      COI:
+        description: >-
+          Cytochrome c oxidase subunit I, targeting invertebrates.
+          Anticipated for soil samples. Not yet in use.
+      ITS:
+        description: >-
+          Internal Transcribed Spacer, targeting fungi.
+          Anticipated for soil samples. Not yet in use.
+
+  # ---------------------------------------------------------------------------
+  # Faecal-specific enums
+  # ---------------------------------------------------------------------------
+
+  EcologicalGuildEnum:
+    description: >-
+      Trophic guild classification of the host organism.
+      PROJECT_SPECIFIC: Not required by NCBI or DwC, but essential for the
+      ecological network analysis that is the scientific core of this project.
+      RECOMMENDATION: Formalize definitions and consider alignment with
+      an established trophic ontology if one exists.
+    permissible_values:
+      Browser:
+        description: Feeds primarily on leaves, soft shoots, and fruits of woody plants.
+      Browser-Frugivore:
+        description: Browses on woody plants and also consumes significant fruit.
+      Browser-Grazer:
+        description: Mixed feeder; browses and grazes depending on season/availability.
+      Carnivore:
+        description: Feeds primarily on animal tissue.
+      Carnivore-Omnivore:
+        description: Primarily carnivorous but also consumes non-animal food.
+      Folivore:
+        description: Feeds primarily on leaves.
+      Grazer:
+        description: Feeds primarily on grasses.
+      Grazer-Omnivore:
+        description: Primarily grazes but also consumes non-grass food.
+      Herbivore:
+        description: General herbivore (not further classified as browser or grazer).
+      Herbivore-Frugivore:
+        description: Herbivore with significant fruit consumption.
+      Herbivore-Omnivore:
+        description: Primarily herbivorous but also consumes animal-derived food.
+      Hypercarnivore:
+        description: >-
+          Obligate carnivore; >70% of diet is animal tissue.
+          (e.g., Panthera leo, Acinonyx jubatus)
+      Insectivore:
+        description: Feeds primarily on insects and other arthropods.
+      Mixed Feeder:
+        description: No dominant food type; feeds across multiple trophic categories.
+      Omnivore:
+        description: Feeds on both plant and animal material in roughly equal measure.
+      Omnivore-Frugivore:
+        description: Omnivore with significant fruit consumption.
+      Scavenger:
+        description: Feeds primarily on carrion.
+      Scavenger-Carnivore:
+        description: Scavenges and also actively hunts.
+
+  FaecalAgeEnum:
+    description: >-
+      Estimated age of the faecal sample at time of collection.
+      PROJECT_SPECIFIC: Relevant for eDNA degradation context.
+    permissible_values:
+      observed:
+        description: Defecation directly observed by collector.
+      less_than_24hr:
+        description: Estimated <24 hours old.
+        meaning: "<24hr"
+      greater_than_24hr:
+        description: Estimated >24 hours old.
+        meaning: ">24hr"
+      1-2_days:
+        description: Estimated 1-2 days old.
+      2_days:
+        description: Estimated approximately 2 days old.
+      3-7_days:
+        description: Estimated 3-7 days old.
+      greater_than_2_weeks:
+        description: Estimated >2 weeks old.
+        meaning: ">2_weeks"
+      old:
+        description: Visibly old, age not further estimated.
+      unknown:
+        description: Age could not be estimated.
+      other:
+        description: Other age estimate (see notes).
+
+
+# =============================================================================
+# SLOTS — Field definitions
+# =============================================================================
+
+slots:
+
+  # ---------------------------------------------------------------------------
+  # Identifiers
+  # ---------------------------------------------------------------------------
+
+  barcode_id:
+    description: >-
+      Unique physical sample barcode assigned in the field.
+      This is the primary key for all sample types.
+      NCBI_REQUIRED: Maps to sample_name in BioSample.
+      DWC: Used to construct dwc:materialSampleID.
+    identifier: true
+    range: string
+    required: true
+    examples:
+      - value: S080121
+        description: Soil sample barcode
+      - value: APANGW01.1
+        description: Water sample barcode
+      - value: S060201
+        description: Faecal sample barcode
+
+  sample_name:
+    description: >-
+      Descriptive sample name used by the project team.
+      Present in faecal metadata (e.g., INP_24_GASA_1).
+      May encode park, year, species, and sequence number.
+    range: string
+
+  lab_id:
+    description: >-
+      Internal laboratory identifier assigned by Jonah Ventures.
+      Present in water metadata (e.g., FC-W-191).
+    range: string
+
+  study_site_id:
+    description: >-
+      Unique identifier for a study site, constructed as
+      "{park_name}-{location_type}" (e.g., "Akagera-park").
+    identifier: true
+    range: string
+
+  bioproject_accession:
+    description: >-
+      NCBI BioProject accession number.
+      NCBI_REQUIRED (after registration).
+    range: string
+    pattern: "^PRJ[A-Z]{2}\\d+$"
+
+  biosample_accession:
+    description: >-
+      NCBI BioSample accession number, assigned after submission.
+      NCBI_REQUIRED (after registration).
+    range: string
+    pattern: "^SAMN\\d+$"
+
+  sra_accession:
+    description: >-
+      NCBI SRA run accession number, assigned after submission.
+    range: string
+    pattern: "^SRR\\d+$"
+
+  run_id:
+    description: >-
+      Jonah Ventures sequencing run identifier (e.g., JV339).
+      NCBI: Will map to SRA experiment/run metadata.
+    identifier: true
+    range: string
+
+  assay_id:
+    description: >-
+      Unique identifier for a sample × marker combination.
+      Constructed as "{barcode_id}_{marker}" (e.g., "S060201_12S_vertebrate").
+    identifier: true
+    range: string
+
+  occurrence_id:
+    description: >-
+      Unique identifier for a single taxon detection.
+      DWC_REQUIRED: Maps to dwc:occurrenceID.
+      Constructed as "{barcode_id}_{marker}_{esv_id}" or similar.
+    identifier: true
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Geographic and site fields
+  # ---------------------------------------------------------------------------
+
+  country:
+    description: >-
+      Standardized country name (INSDC vocabulary).
+      NCBI_REQUIRED: Part of geo_loc_name.
+      DWC_REQUIRED: Maps to dwc:country.
+    range: CountryEnum
+    required: true
+
+  country_verbatim:
+    description: >-
+      Country name exactly as recorded in the source spreadsheet.
+      Preserved for traceability. Examples: "r.congo", "rep.congo", "zambia".
+    range: string
+
+  country_code:
+    description: >-
+      ISO 3166-1 alpha-2 country code.
+      DWC_RECOMMENDED: Maps to dwc:countryCode.
+    range: CountryCodeEnum
+
+  park_name:
+    description: >-
+      Standardized park name.
+      NCBI_RECOMMENDED: Part of geo_loc_name (after colon).
+      DWC_RECOMMENDED: Maps to dwc:locality.
+    range: ParkNameEnum
+    required: true
+
+  park_name_verbatim:
+    description: >-
+      Park name exactly as recorded in the source spreadsheet.
+      Preserved for traceability. Examples: "Odzala Okoua", "iona".
+    range: string
+
+  location_type:
+    description: >-
+      Whether the site is inside the park (managed) or a control site
+      (outside park boundaries, unmanaged).
+      PROJECT_SPECIFIC but critical for the comparative study design.
+    range: LocationTypeEnum
+    required: true
+
+  geo_loc_name:
+    description: >-
+      NCBI-formatted geographic location string.
+      NCBI_REQUIRED: Format "Country: locality" using INSDC vocabulary.
+      Example: "Rwanda: Akagera National Park"
+      DERIVED: Constructed from country + park_name.
+    range: string
+
+  latitude:
+    description: >-
+      Decimal latitude of the sampling point (WGS84).
+      NCBI_REQUIRED: Combined with longitude for lat_lon field.
+      DWC_REQUIRED: Maps to dwc:decimalLatitude.
+    range: double
+
+  longitude:
+    description: >-
+      Decimal longitude of the sampling point (WGS84).
+      NCBI_REQUIRED: Combined with latitude for lat_lon field.
+      DWC_REQUIRED: Maps to dwc:decimalLongitude.
+    range: double
+
+  lat_lon:
+    description: >-
+      NCBI-formatted latitude/longitude string.
+      NCBI_REQUIRED: Format "d[d.dddd] N|S d[dd.dddd] W|E".
+      DERIVED: Constructed from latitude and longitude.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Temporal fields
+  # ---------------------------------------------------------------------------
+
+  collection_date:
+    description: >-
+      Date the sample was collected in the field.
+      NCBI_REQUIRED: ISO 8601 format (YYYY-MM-DD).
+      DWC_REQUIRED: Maps to dwc:eventDate.
+    range: date
+    required: true
+
+  collection_date_verbatim:
+    description: >-
+      Collection date exactly as recorded in source data.
+      Preserved because source files use varying formats
+      (M/D/YYYY, datetime objects, etc.).
+    range: string
+
+  collection_time:
+    description: >-
+      Time of sample collection (HH:MM:SS).
+      NCBI_RECOMMENDED: Can be appended to collection_date as ISO 8601 datetime.
+      DWC_RECOMMENDED: Part of dwc:eventDate if time precision desired.
+    range: string
+
+  collection_year:
+    description: Year of sample collection.
+    range: integer
+
+  # ---------------------------------------------------------------------------
+  # Habitat and environment
+  # ---------------------------------------------------------------------------
+
+  habitat:
+    description: >-
+      Standardized habitat type at the sampling location.
+      NCBI_RECOMMENDED: Used to derive env_broad_scale and env_local_scale (ENVO terms).
+      DWC_RECOMMENDED: Maps to dwc:habitat.
+    range: HabitatEnum
+
+  habitat_verbatim:
+    description: >-
+      Habitat value exactly as recorded in source data.
+      Preserved for traceability. Examples: "Bai", "woodlands", "desert_dunes".
+    range: string
+
+  env_broad_scale:
+    description: >-
+      NCBI ENVO term for the broad environmental context.
+      NCBI_REQUIRED: Format "term [ENVO:XXXXXXXX]".
+      RECOMMENDATION: Map each habitat value to an appropriate ENVO biome term.
+      Example: "tropical moist broadleaf forest biome [ENVO:01000228]"
+      STATUS: Mapping not yet complete. See design document for proposed mappings.
+    range: string
+
+  env_local_scale:
+    description: >-
+      NCBI ENVO term for the local environmental context.
+      NCBI_REQUIRED: Format "term [ENVO:XXXXXXXX]".
+      Example: "forest clearing [ENVO:00000149]"
+    range: string
+
+  env_medium:
+    description: >-
+      NCBI ENVO term for the environmental material sampled.
+      NCBI_REQUIRED: Format "term [ENVO:XXXXXXXX]".
+      Values depend on sample_type:
+        soil → "soil [ENVO:00001998]"
+        water → "water [ENVO:00002006]"
+        faecal → "feces [ENVO:00002003]"
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Sample-type-specific fields: SOIL
+  # ---------------------------------------------------------------------------
+
+  sample_type:
+    description: Type of physical sample collected.
+    range: SampleTypeEnum
+    required: true
+
+  soil_type:
+    description: >-
+      Soil classification at the sampling point.
+      NCBI_RECOMMENDED: Maps to soil_type in MIMS.me.soil package.
+      STATUS: Values TBD from data provider.
+    range: string
+
+  soil_moisture:
+    description: >-
+      Soil moisture measurement at time of collection.
+      NCBI_RECOMMENDED: Maps to water_content in MIMS.me.soil.
+    range: string
+
+  soil_depth:
+    description: >-
+      Depth of soil sample collection.
+      NCBI_RECOMMENDED: Maps to depth in MIMS.me.soil. Format: "{value} m".
+    range: string
+
+  soil_temperature:
+    description: >-
+      Soil temperature at time of collection (°C).
+      NCBI_RECOMMENDED: Maps to temp in MIMS.me.soil.
+    range: string
+
+  soil_ph:
+    description: >-
+      Soil pH at time of collection.
+      NCBI_RECOMMENDED: Maps to ph in MIMS.me.soil.
+    range: string
+
+  burned_2024:
+    description: >-
+      Whether the sampling site was burned in 2024.
+      PROJECT_SPECIFIC: Relevant for fire ecology context in savanna/woodland sites.
+    range: string
+
+  burn_frequency:
+    description: >-
+      Historical burn frequency at the site.
+      PROJECT_SPECIFIC: Relevant for fire ecology context.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Sample-type-specific fields: WATER
+  # ---------------------------------------------------------------------------
+
+  water_collection_method:
+    description: >-
+      Method used to collect the water sample.
+      PROJECT_SPECIFIC but relevant for protocol documentation.
+      RECOMMENDATION: Publish as a registered protocol (e.g., protocols.io)
+      and reference via dwc:samplingProtocol.
+    range: string
+
+  waterbody_type:
+    description: >-
+      Type of water body sampled (e.g., river, lake, stream, pan).
+      NCBI_RECOMMENDED: Relevant context for MIMS.me.water package.
+      DWC_RECOMMENDED: Relevant for dwc:waterBody.
+    range: string
+
+  water_body_name:
+    description: >-
+      Name of the specific water body sampled.
+      DWC_RECOMMENDED: Maps to dwc:waterBody.
+    range: string
+
+  waterbody_substrate:
+    description: >-
+      Bottom substrate type of the water body (e.g., sand, mud, rock).
+      NCBI_RECOMMENDED: Relevant for MIMS.me.water.
+    range: string
+
+  water_flow:
+    description: >-
+      Flow characteristics of the water body (e.g., still, slow, fast).
+      NCBI_RECOMMENDED: Relevant for MIMS.me.water.
+    range: string
+
+  transparency:
+    description: >-
+      Water transparency/turbidity measurement.
+      NCBI_RECOMMENDED: Relevant for MIMS.me.water (turbidity field).
+    range: string
+
+  water_filtered_ml:
+    description: >-
+      Volume of water filtered in millilitres.
+      NCBI_RECOMMENDED: Relevant for sample size context.
+      DWC_RECOMMENDED: Maps to dwc:sampleSizeValue (with sampleSizeUnit = "mL").
+    range: float
+
+  water_temperature_c:
+    description: >-
+      Water temperature at time of collection (°C).
+      NCBI_RECOMMENDED: Maps to temp in MIMS.me.water.
+    range: float
+
+  # ---------------------------------------------------------------------------
+  # Sample-type-specific fields: FAECAL
+  # ---------------------------------------------------------------------------
+
+  host_species_field:
+    description: >-
+      Host species as identified in the field (common name).
+      PROJECT_SPECIFIC: Useful for QC comparison with DNA-based ID.
+    range: string
+
+  host_species_field_verbatim:
+    description: >-
+      Field host identification exactly as recorded in source data.
+    range: string
+
+  host_taxon_id:
+    description: >-
+      DNA-confirmed host species (Latin binomial).
+      NCBI_REQUIRED (for host-associated): Maps to host in MIMS.me.host-associated.
+      DWC_RECOMMENDED: Maps to dwc:associatedTaxa for prey occurrences.
+    range: string
+
+  host_common_name:
+    description: >-
+      DNA-confirmed host species common name.
+      NCBI_RECOMMENDED: Maps to host_common_name in BioSample.
+    range: string
+
+  host_taxonomic_order:
+    description: >-
+      Taxonomic order of the DNA-confirmed host.
+    range: string
+
+  host_taxonomic_family:
+    description: >-
+      Taxonomic family of the DNA-confirmed host.
+    range: string
+
+  host_diet_type:
+    description: >-
+      Diet classification of the host species.
+      NCBI_RECOMMENDED: Maps to host_diet in MIMS.me.host-associated.
+    range: string
+
+  ecological_guild:
+    description: >-
+      Trophic guild classification of the host organism.
+      PROJECT_SPECIFIC: Central to the ecological network analysis.
+    range: EcologicalGuildEnum
+
+  faecal_age:
+    description: >-
+      Estimated age of the faecal sample at collection.
+      PROJECT_SPECIFIC: Relevant for eDNA quality assessment.
+    range: FaecalAgeEnum
+
+  faecal_texture:
+    description: >-
+      Texture/consistency of the faecal sample.
+      PROJECT_SPECIFIC.
+    range: string
+
+  host_sex:
+    description: >-
+      Sex of the host animal (if determinable).
+      NCBI_RECOMMENDED: Maps to host_sex in MIMS.me.host-associated.
+      DWC_RECOMMENDED: Maps to dwc:sex.
+    range: string
+
+  host_age_class:
+    description: >-
+      Age class of the host animal (e.g., juvenile, sub-adult, adult).
+      NCBI_RECOMMENDED: Maps to host_age in MIMS.me.host-associated.
+    range: string
+
+  is_latrine:
+    description: >-
+      Whether the sample was collected from a communal latrine site.
+      PROJECT_SPECIFIC.
+    range: string
+
+  has_swab:
+    description: >-
+      Whether a swab was taken in addition to or instead of bulk sample.
+      PROJECT_SPECIFIC.
+    range: string
+
+  swab_barcode_id:
+    description: >-
+      Barcode ID of the associated swab sample, if one was taken.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Common collection fields
+  # ---------------------------------------------------------------------------
+
+  has_it_rained_in_the_past_week:
+    description: >-
+      Whether it rained in the past week at the sampling location.
+      PROJECT_SPECIFIC: Relevant for eDNA persistence/transport context.
+    range: string
+
+  collector:
+    description: >-
+      Name of the person who collected the sample.
+      DWC_RECOMMENDED: Maps to dwc:recordedBy.
+    range: string
+
+  collection_notes:
+    description: >-
+      Free-text notes recorded during sample collection.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Sequencing run fields
+  # ---------------------------------------------------------------------------
+
+  date_run:
+    description: >-
+      Date the sequencing run was performed.
+      NCBI_RECOMMENDED: Relevant for SRA run metadata.
+    range: date
+
+  date_first_analyzed:
+    description: >-
+      Date results were first analyzed after sequencing.
+    range: date
+
+  sequencing_platform:
+    description: >-
+      Sequencing platform used.
+      NCBI_REQUIRED (for SRA): e.g., "ILLUMINA".
+      STATUS: TBD — awaiting Jonah Ventures response.
+    range: string
+
+  sequencing_instrument:
+    description: >-
+      Specific sequencing instrument model.
+      NCBI_REQUIRED (for SRA): e.g., "Illumina MiSeq".
+      STATUS: TBD — awaiting Jonah Ventures response.
+    range: string
+
+  library_layout:
+    description: >-
+      Sequencing library layout.
+      NCBI_REQUIRED (for SRA): "PAIRED" or "SINGLE".
+      STATUS: TBD.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Assay / library prep fields
+  # ---------------------------------------------------------------------------
+
+  marker:
+    description: >-
+      Genetic marker targeted in this assay.
+      NCBI_REQUIRED (for SRA): Maps to target_gene.
+      DWC_REQUIRED (DNA extension): Maps to pcr_primer_name fields.
+    range: MarkerEnum
+    required: true
+
+  primer_forward_name:
+    description: >-
+      Name of the forward PCR primer.
+      DWC_RECOMMENDED (DNA extension).
+      STATUS: TBD — awaiting Jonah Ventures response.
+    range: string
+
+  primer_forward_sequence:
+    description: >-
+      Nucleotide sequence of the forward PCR primer.
+      DWC_RECOMMENDED (DNA extension).
+      STATUS: TBD.
+    range: string
+
+  primer_reverse_name:
+    description: >-
+      Name of the reverse PCR primer.
+      DWC_RECOMMENDED (DNA extension).
+      STATUS: TBD.
+    range: string
+
+  primer_reverse_sequence:
+    description: >-
+      Nucleotide sequence of the reverse PCR primer.
+      DWC_RECOMMENDED (DNA extension).
+      STATUS: TBD.
+    range: string
+
+  total_reads:
+    description: >-
+      Total number of sequence reads for this assay.
+      PROJECT_SPECIFIC but useful for quality context.
+    range: integer
+
+  total_esvs:
+    description: >-
+      Total number of Exact Sequence Variants detected in this assay.
+    range: integer
+
+  # ---------------------------------------------------------------------------
+  # Occurrence / taxonomy fields
+  # ---------------------------------------------------------------------------
+
+  dna_sequence:
+    description: >-
+      The nucleotide sequence of the ESV.
+      DWC_REQUIRED (DNA extension): Maps to DNA_sequence.
+    range: string
+
+  scientific_name:
+    description: >-
+      Consensus taxonomic identification (Latin binomial or higher rank).
+      DWC_REQUIRED: Maps to dwc:scientificName.
+    range: string
+
+  common_name:
+    description: >-
+      Common name of the identified taxon.
+      DWC_RECOMMENDED: Maps to dwc:vernacularName.
+    range: string
+
+  taxon_kingdom:
+    description: "DWC_RECOMMENDED: Maps to dwc:kingdom."
+    range: string
+
+  taxon_class:
+    description: "DWC_RECOMMENDED: Maps to dwc:class."
+    range: string
+
+  taxon_order:
+    description: "DWC_RECOMMENDED: Maps to dwc:order."
+    range: string
+
+  taxon_family:
+    description: "DWC_RECOMMENDED: Maps to dwc:family."
+    range: string
+
+  taxon_genus:
+    description: "DWC_RECOMMENDED: Maps to dwc:genus."
+    range: string
+
+  taxon_rank:
+    description: >-
+      The lowest taxonomic rank to which this occurrence was identified.
+      DWC_REQUIRED: Maps to dwc:taxonRank.
+    range: string
+
+  percent_match:
+    description: >-
+      Percentage match of the ESV sequence to the reference database.
+      DWC_RECOMMENDED: Include in dwc:identificationRemarks.
+    range: float
+
+  sequence_reads:
+    description: >-
+      Number of reads assigned to this ESV in this sample.
+      DWC_RECOMMENDED: Maps to dwc:organismQuantity
+      (with organismQuantityType = "DNA sequence reads").
+    range: integer
+
+  relative_read_abundance:
+    description: >-
+      Relative Read Abundance (RRA) of this ESV as proportion (0–1).
+      DWC_RECOMMENDED: Maps to dwc:organismQuantity
+      (with organismQuantityType = "relative read abundance").
+    range: float
+
+  detected_species_type:
+    description: >-
+      Classification of the detected species in context of the sample
+      (e.g., "prey", "host", "environmental", "contaminant").
+      STATUS: Exact vocabulary TBD — awaiting Jonah Ventures clarification.
+    range: string
+
+  detected_diet_type:
+    description: >-
+      Diet classification of the detected organism.
+      PROJECT_SPECIFIC: Relevant for network analysis.
+    range: string
+
+  replicate_esv_id:
+    description: >-
+      Replicate ESV identifier from the bioinformatics pipeline.
+      STATUS: Exact meaning TBD — awaiting Jonah Ventures clarification.
+    range: string
+
+  identification_references:
+    description: >-
+      Reference database(s) used for taxonomic assignment.
+      DWC_RECOMMENDED: Maps to dwc:identificationReferences.
+      STATUS: TBD — awaiting Jonah Ventures response.
+    range: string
+
+  identification_remarks:
+    description: >-
+      Additional notes on the identification, including pipeline,
+      % match, and any caveats.
+      DWC_RECOMMENDED: Maps to dwc:identificationRemarks.
+    range: string
+
+  # ---------------------------------------------------------------------------
+  # Relational / linking fields
+  # ---------------------------------------------------------------------------
+
+  has_study_site:
+    description: Links a sample to its study site.
+    range: StudySite
+
+  has_assays:
+    description: Links a sample to its assay records.
+    range: Assay
+    multivalued: true
+    inlined_as_list: true
+
+  has_sequencing_run:
+    description: Links an assay to its sequencing run.
+    range: SequencingRun
+
+  has_occurrences:
+    description: Links an assay to its taxonomic occurrence detections.
+    range: Occurrence
+    multivalued: true
+    inlined_as_list: true
+
+  has_samples:
+    description: Links a study site to its samples.
+    range: BioSample
+    multivalued: true
+    inlined_as_list: true
+
+  has_park_bioproject:
+    description: Links a park-level BioProject to the umbrella.
+    range: MENABioProject
+    multivalued: true
+    inlined_as_list: true
+
+  has_study_sites:
+    description: Links a BioProject to its study sites.
+    range: StudySite
+    multivalued: true
+    inlined_as_list: true
+
+
+# =============================================================================
+# CLASSES — Entity definitions
+# =============================================================================
+
+classes:
+
+  # ---------------------------------------------------------------------------
+  # Container / root class
+  # ---------------------------------------------------------------------------
+
+  MENADataset:
+    description: >-
+      Root container for the entire MENA eDNA dataset.
+      This is the top-level object that holds all other entities.
+    tree_root: true
+    attributes:
+      umbrella_bioproject:
+        description: The NCBI umbrella BioProject for the whole MENA project.
+        range: MENABioProject
+      park_bioprojects:
+        description: Child BioProjects, one per park.
+        range: MENABioProject
+        multivalued: true
+        inlined_as_list: true
+      study_sites:
+        description: All study sites across all parks.
+        range: StudySite
+        multivalued: true
+        inlined_as_list: true
+      sequencing_runs:
+        description: All sequencing runs across the project.
+        range: SequencingRun
+        multivalued: true
+        inlined_as_list: true
+
+  # ---------------------------------------------------------------------------
+  # BioProject
+  # ---------------------------------------------------------------------------
+
+  MENABioProject:
+    description: >-
+      Represents an NCBI BioProject record.
+      Structure: One umbrella BioProject for MENA, with one child
+      BioProject per park.
+      NCBI_REQUIRED fields marked below.
+    attributes:
+      bioproject_accession:
+        description: "NCBI_REQUIRED (after registration): PRJNAxxxxxx"
+        range: string
+      title:
+        description: >-
+          NCBI_REQUIRED: Short descriptive title.
+          Example: "MENA: eDNA metabarcoding of Akagera National Park, Rwanda"
+        range: string
+        required: true
+      description:
+        description: >-
+          NCBI_REQUIRED: Detailed project description.
+        range: string
+      project_type:
+        description: >-
+          NCBI_REQUIRED: "Metagenome" for this project.
+        range: string
+      center_name:
+        description: >-
+          NCBI_REQUIRED: Submitting institution.
+          Value: "African Parks" (or lab name if Jonah Ventures submits).
+        range: string
+      is_umbrella:
+        description: Whether this is the umbrella BioProject.
+        range: boolean
+      park_name:
+        description: >-
+          For child BioProjects, the park this project covers.
+        range: ParkNameEnum
+      has_study_sites:
+        range: StudySite
+        multivalued: true
+        inlined_as_list: true
+
+  # ---------------------------------------------------------------------------
+  # StudySite
+  # ---------------------------------------------------------------------------
+
+  StudySite:
+    description: >-
+      A park × location_type combination (e.g., "Akagera-park").
+      Not directly submitted to NCBI, but provides organizational structure.
+      DWC: Maps to a dwc:Event grouping (dwc:locationID).
+    slots:
+      - study_site_id
+      - park_name
+      - park_name_verbatim
+      - country
+      - country_verbatim
+      - country_code
+      - location_type
+      - has_samples
+
+  # ---------------------------------------------------------------------------
+  # BioSample (base class with common fields)
+  # ---------------------------------------------------------------------------
+
+  BioSample:
+    description: >-
+      One physical sample collected in the field. This is the base class;
+      type-specific subclasses (SoilSample, WaterSample, FaecalSample)
+      add fields specific to each sample type.
+      NCBI: Each instance becomes one BioSample record.
+      DWC: Each instance is a dwc:MaterialSample linked to a dwc:Event.
+    abstract: true
+    slots:
+      - barcode_id
+      - sample_name
+      - lab_id
+      - biosample_accession
+      - sample_type
+      - collection_date
+      - collection_date_verbatim
+      - collection_time
+      - collection_year
+      - latitude
+      - longitude
+      - lat_lon
+      - geo_loc_name
+      - habitat
+      - habitat_verbatim
+      - env_broad_scale
+      - env_local_scale
+      - env_medium
+      - has_it_rained_in_the_past_week
+      - collector
+      - collection_notes
+      - has_study_site
+      - has_assays
+    rules:
+      - description: >-
+          NCBI requires collection_date, geo_loc_name, and lat_lon
+          for all BioSample submissions.
+        preconditions:
+          slot_conditions:
+            barcode_id:
+              required: true
+        postconditions:
+          slot_conditions:
+            collection_date:
+              required: true
+            latitude:
+              required: true
+            longitude:
+              required: true
+
+  SoilSample:
+    description: >-
+      A soil eDNA sample.
+      NCBI package: MIMS.me.soil (or MIMS.me.environmental).
+      Organism: "soil metagenome" (NCBI Taxonomy ID: 410658).
+    is_a: BioSample
+    slots:
+      - soil_type
+      - soil_moisture
+      - soil_depth
+      - soil_temperature
+      - soil_ph
+      - burned_2024
+      - burn_frequency
+    slot_usage:
+      sample_type:
+        equals_string: "soil"
+      env_medium:
+        description: "Fixed value: 'soil [ENVO:00001998]'"
+
+  WaterSample:
+    description: >-
+      A filtered water eDNA sample.
+      NCBI package: MIMS.me.water (or MIMS.me.environmental).
+      Organism: "freshwater metagenome" (NCBI Taxonomy ID: 449393).
+    is_a: BioSample
+    slots:
+      - water_collection_method
+      - waterbody_type
+      - water_body_name
+      - waterbody_substrate
+      - water_flow
+      - transparency
+      - water_filtered_ml
+      - water_temperature_c
+    slot_usage:
+      sample_type:
+        equals_string: "water"
+      env_medium:
+        description: "Fixed value: 'water [ENVO:00002006]'"
+
+  FaecalSample:
+    description: >-
+      A faecal (dung) eDNA sample.
+      NCBI package: MIMS.me.host-associated.
+      Organism: "gut metagenome" (NCBI Taxonomy ID: 749906).
+      IMPORTANT: The host field is NCBI-required for this package.
+    is_a: BioSample
+    slots:
+      - host_species_field
+      - host_species_field_verbatim
+      - host_taxon_id
+      - host_common_name
+      - host_taxonomic_order
+      - host_taxonomic_family
+      - host_diet_type
+      - ecological_guild
+      - faecal_age
+      - faecal_texture
+      - host_sex
+      - host_age_class
+      - is_latrine
+      - has_swab
+      - swab_barcode_id
+    slot_usage:
+      sample_type:
+        equals_string: "faecal"
+      env_medium:
+        description: "Fixed value: 'feces [ENVO:00002003]'"
+      host_taxon_id:
+        description: >-
+          NCBI_REQUIRED for MIMS.me.host-associated package.
+          Use DNA-confirmed species (Latin binomial).
+          If DNA ID is not available, use field ID with a note.
+        required: true
+
+  # ---------------------------------------------------------------------------
+  # Assay (Library)
+  # ---------------------------------------------------------------------------
+
+  Assay:
+    description: >-
+      One assay = one marker applied to one sample.
+      Represents the library preparation step.
+      NCBI: Maps to an SRA Experiment.
+      A single sample may have multiple assays (e.g., 12S + trnL for faecal).
+    slots:
+      - assay_id
+      - barcode_id
+      - marker
+      - primer_forward_name
+      - primer_forward_sequence
+      - primer_reverse_name
+      - primer_reverse_sequence
+      - total_reads
+      - total_esvs
+      - has_sequencing_run
+      - has_occurrences
+
+  # ---------------------------------------------------------------------------
+  # SequencingRun
+  # ---------------------------------------------------------------------------
+
+  SequencingRun:
+    description: >-
+      A physical sequencing run on the instrument.
+      NCBI: Maps to an SRA Run.
+      Many assays (from different samples) are multiplexed on one run.
+    slots:
+      - run_id
+      - sra_accession
+      - date_run
+      - date_first_analyzed
+      - sequencing_platform
+      - sequencing_instrument
+      - library_layout
+
+  # ---------------------------------------------------------------------------
+  # Occurrence
+  # ---------------------------------------------------------------------------
+
+  Occurrence:
+    description: >-
+      A single taxon detection from a single assay.
+      Each row in the 12S vertebrate results file maps to one Occurrence.
+      DWC: Maps to dwc:Occurrence + DNA Derived Data extension.
+      GBIF: Published as DNA-derived occurrence records.
+    slots:
+      - occurrence_id
+      - dna_sequence
+      - replicate_esv_id
+      - scientific_name
+      - common_name
+      - taxon_kingdom
+      - taxon_class
+      - taxon_order
+      - taxon_family
+      - taxon_genus
+      - taxon_rank
+      - percent_match
+      - sequence_reads
+      - relative_read_abundance
+      - detected_species_type
+      - detected_diet_type
+      - identification_references
+      - identification_remarks
