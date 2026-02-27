@@ -51,6 +51,10 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Outstanding Questions:
+    - Jonah Ventures: questions/jonah-ventures.md
+    - All Outstanding: questions/all-outstanding.md
+  - Status: status.md
   - Schema:
     - Overview: schema/overview.md
     - Entity Model: schema/entity-model.md
@@ -65,10 +69,9 @@ nav:
     - NCBI Strategy: design/ncbi-strategy.md
     - GBIF Strategy: design/gbif-strategy.md
     - Recommendations: design/recommendations.md
-  - Questions:
-    - Jonah Ventures: questions/jonah-ventures.md
-    - All Outstanding: questions/all-outstanding.md
-  - Status: status.md
 
 extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
+extra:
+  robots: noindex, nofollow
