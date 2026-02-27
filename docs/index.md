@@ -4,9 +4,6 @@
 
 This site documents the data model and publishing workflow for the **MENA eDNA project**, which combines environmental DNA metabarcoding with Ecological Network Analysis to assess biodiversity and ecosystem integrity across five African national parks.
 
-!!! info "Project Status"
-    **Draft** — Schema v0.1.0. Awaiting responses from Jonah Ventures on sequencing methods before finalizing. See [Status](status.md) for details.
-
 ## What is MENA?
 
 The MENA project uses eDNA from **soil**, **water**, and **faecal** samples to detect species presence — from microbes to megafauna — and then reconstructs food webs and trophic relationships to measure ecosystem function. By comparing managed park sites with unmanaged control sites outside park boundaries, MENA provides a science-based framework for measuring conservation effectiveness.

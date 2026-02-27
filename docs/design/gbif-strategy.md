@@ -56,34 +56,7 @@ For faecal samples, the **host animal** is also a biodiversity observation. Publ
 
 This doubles the biodiversity value of the dataset and is consistent with the project's conservation monitoring goals.
 
-## License Decision Pending
+## MDT vs IPT
 
-!!! warning "License TBD"
-    The meeting notes indicate data cannot be used for commercial purposes, suggesting **CC-BY-NC**. However, GBIF strongly encourages **CC0** or **CC-BY** for maximum reuse.
-    
-    CC-BY-NC can limit reuse by:
-    
-    - Conservation NGOs with any commercial activity
-    - Data aggregators and derivative platforms
-    - Researchers at institutions with commercial partnerships
-    
-    This is an organizational policy decision for African Parks leadership.
+GBIF's [Metabarcoding Data Toolkit](https://www.gbif.org/tools/metabarcoding-data-toolkit) is designed for publishing eDNA datasets. 
 
-## Metabarcoding Data Toolkit (MDT)
-
-GBIF's [Metabarcoding Data Toolkit](https://www.gbif.org/tools/metabarcoding-data-toolkit) is designed for publishing eDNA datasets. For MENA:
-
-- **Good for:** Initial prototyping and validation with a small subset
-- **Limited for:** Three sample types, multiple markers, host + prey occurrences, rich custom metadata
-
-**Recommendation:** Use MDT for early testing, then build a custom Python/R conversion pipeline for the full dataset.
-
-## Coordination with NCBI
-
-GBIF occurrence records should reference NCBI accessions where possible:
-
-| DwC Field | NCBI Accession |
-|---|---|
-| `associatedSequences` | SRA run accession (SRRxxxxxxx) |
-| `references` | BioProject accession (PRJNAxxxxxx) |
-| `materialSampleID` | BioSample accession (SAMNxxxxxxxx) |
