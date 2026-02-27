@@ -51,6 +51,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Conceptual Model: schema/conceptual-model.md
   - Outstanding Questions: questions/all-outstanding.md
   - Schema:
     - Overview: schema/overview.md

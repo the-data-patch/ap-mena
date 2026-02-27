@@ -143,25 +143,3 @@
 64. `[Schema]` **Template for other parks** — Design the MENA model so it can be reused across AP's 24–30 areas.
 
 ---
-
-## Priority Summary
-
-| Priority | Questions | Who | Needed For |
-|---|---|---|---|
-| 🔴 Critical | A.1–A.6 | Jonah Ventures | `[SRA]` Platform, instrument, library prep |
-| 🔴 Critical | A.3–A.4 | Jonah Ventures | `[SRA]` `[GBIF]` Primer sequences |
-| 🔴 Critical | B.25–B.28 | Univ. of Porto | `[SRA]` `[GBIF]` Water sequencing methods |
-| 🔴 Critical | A.15–A.17 | Jonah Ventures | `[SRA]` FASTQ upload coordination |
-| 🔴 Critical | B.34–B.35 | Univ. of Porto | `[SRA]` Water FASTQ upload coordination |
-| 🟡 Important | A.10–A.14 | Jonah Ventures | `[GBIF]` Bioinformatics for identificationRemarks |
-| 🟡 Important | B.32–B.33 | Univ. of Porto | `[GBIF]` Water bioinformatics |
-| 🟡 Important | C.55 | Jordana / AP | `[Policy]` Coordinate sensitivity |
-| 🟡 Important | C.57 | AP leadership | `[Policy]` License decision |
-| 🟡 Important | C.53–C.54 | Jordana | `[BioProject]` Project name and collaborators |
-| 🟢 Helpful | A.18–A.24 | Jonah Ventures | `[Schema]` Field definitions |
-| 🟢 Helpful | C.37–C.39 | Jordana | `[Protocol]` For protocols.io registration |
-| 🟢 Helpful | C.42–C.47 | Jordana | `[Schema]` Faecal field definitions |
-
----
-
-*Revised: February 2026*
