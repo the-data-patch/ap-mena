@@ -35,11 +35,3 @@ This documentation supports three goals:
 1. **Data modeling** — A [LinkML schema](schema/overview.md) that defines every entity, field, and controlled vocabulary in the MENA dataset
 2. **NCBI submission** — Metadata preparation for BioProject, BioSample, and SRA registration
 3. **GBIF publication** — Mapping to Darwin Core and the DNA Derived Data extension for occurrence publishing
-
-## Quick Links
-
-- [Schema overview](schema/overview.md) — Entity model and field classification
-- [Data inventory](data/file-inventory.md) — Source files and record counts
-- [NCBI strategy](design/ncbi-strategy.md) — BioProject/BioSample/SRA plan
-- [GBIF strategy](design/gbif-strategy.md) — Darwin Core mapping and publishing
-- [Outstanding questions](questions/all-outstanding.md) — What we still need to know
