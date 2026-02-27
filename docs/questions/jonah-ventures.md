@@ -1,15 +1,5 @@
 # MENA eDNA Project — Questions for Jonah Ventures
 
-**From:** Steve Baskauf, on behalf of African Parks / Jordana Morgan Meyer
-**Re:** NCBI submission coordination for the MENA eDNA project
-**Date:** February 2026
-
-**Context:** African Parks is preparing NCBI BioProject and BioSample registrations for ~5,860 faecal and soil samples from the MENA project (five national parks across five African countries). Jonah Ventures performed sequencing on these samples. We need the information below to finalize metadata and coordinate SRA uploads.
-
-**Submission plan:** African Parks will create the umbrella BioProject, park-level BioProjects, and all BioSamples. We will provide Jonah Ventures a mapping file (`barcode_id → BioSample accession → BioProject accession`) so that Jonah Ventures can reference these when uploading FASTQs to SRA.
-
----
-
 ### How to read the tags
 
 | Tag | Meaning |
@@ -66,8 +56,3 @@ These clarify fields in the results files you provided.
 23. `[QC]` What does the `NEW COMMENT` column in the 12S file contain?
 24. `[Schema]` What does the `samples/YEAR` column in the 12S results represent?
 
----
-
-**Please respond to whichever questions you can. The most critical for us are #1–6 (sequencing methods) and #15–17 (SRA coordination).**
-
-Thank you!

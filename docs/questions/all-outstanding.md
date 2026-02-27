@@ -1,13 +1,5 @@
 # MENA eDNA Project — Outstanding Questions for Data Provider
 
-**Purpose:** Support LinkML data modeling, NCBI submission (BioProject/BioSample/SRA), and Darwin Core / GBIF publication.
-
-**Version:** 4 — Updated February 2026. Added repository tags per question.
-
-**Submission plan:** African Parks (Steve) creates BioProjects and BioSamples. Jonah Ventures uploads FASTQs to SRA referencing those accessions. University of Porto TBD.
-
----
-
 ### How to read the tags
 
 | Tag | Meaning |
@@ -20,33 +12,6 @@
 | `[QC]` | Data quality — not required by any repo but prevents errors or future revisions |
 | `[Protocol]` | For protocol documentation (protocols.io / Zenodo) |
 | `[Policy]` | Organizational decision that affects all repositories |
-
----
-
-## Resolved So Far
-
-| # | Item | Answer | Source |
-|---|---|---|---|
-| 1 | PI / Project Manager | Jordana Morgan Meyer (ORCID: 0000-0002-2578-4417) | Questionnaire |
-| 2 | Sequencing lab — faecal & soil | Jonah Ventures | Questionnaire |
-| 3 | Sequencing lab — water | CBO, University of Porto | Meeting notes |
-| 4 | BioProject structure | Umbrella + one child per park | Questionnaire |
-| 5 | FASTQ submission | Jonah Ventures uploads; African Parks creates BioProjects & BioSamples | Questionnaire + clarification |
-| 6 | BioSample packages | MIMS.me.soil, MIMS.me.water, MIMS.me.host-associated | Questionnaire |
-| 7 | GBIF publisher | African Parks via SANBI node | Questionnaire |
-| 8 | GBIF format | DNA-derived occurrences + host occurrences, same dataset | Questionnaire |
-| 9 | Control sites | Outside park boundaries (unmanaged comparison) | Questionnaire |
-| 10 | Sampling period | Complete (defined pilot, 2023–2024) | Questionnaire |
-| 11 | Verbatim + standardized fields | Preserve originals, standardize to ISO/ENVO | Questionnaire |
-| 12 | Embargo | Not important; publishing is the priority | Meeting notes |
-| 13 | Soil sequencing approach | Shotgun metagenomics (not amplicon); 16S planned later | Meeting notes |
-| 14 | Water markers | 16SU + Vertebrate 12S (two primers) | Meeting notes |
-| 15 | Faecal markers | 12S vertebrate + trnL (plant) | Data files |
-| 16 | Total samples | ~7,000 across all parks | Meeting notes |
-| 17 | Commercial use restriction | Data cannot be used for commercial purposes | Meeting notes |
-| 18 | Project timeline | Ends March 2026; extension of ~6 months being sought | Meeting notes |
-| 19 | Physical samples & extracts | Looking for a permanent repository | Meeting notes |
-| 20 | Grouping | By park | Meeting notes |
 
 ---
 
