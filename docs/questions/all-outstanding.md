@@ -27,7 +27,6 @@
 
 ### Data Structure and metadata
 
-1. Can you please remind me of the relationship between `name_of_park`,	`location`,	and `location_other`? `[Schema]` 
 1. Could you please define these fields from the faecal metadata? `[Schema]`
     - `Ecological_Guild` — How is it determined?
     - `species_code` — (e.g., is `INP_24_GASA_1` park/year/species encoding?)
@@ -41,7 +40,6 @@
     - `samples/YEAR` — Just a stat of convenience?
 1. Are the `Reads` values in the 12S results **raw counts** or **post-filtering counts**? `[GBIF]` `[QC]` 
 1. Column `NEW COMMENT` the 12S is empty. Any reason it should be preserved? `[QC]` 
-1. Is the `samples/YEAR` column just a stat of convenience? `[Schema]` 
 
 ### Additional Results
 
@@ -71,8 +69,6 @@
 
 1. What **sequencing platform and instrument** were used for soil shotgun metagenomics? `[SRA]` 
 1. What is the **library preparation protocol** for shotgun? (e.g., Nextera XT, read length, paired-end) `[SRA]` 
-1. **Soil shotgun model** — Since soil is WGS not amplicon, the Assay entity needs a `library_strategy` field (AMPLICON vs WGS) and marker/primer fields become optional for WGS. Soil assays won't have primer sequences. `[SRA]` 
-
 
 ### DNA Extraction (Both)
 
